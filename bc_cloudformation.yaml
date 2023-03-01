@@ -11,7 +11,7 @@ Parameters:
     Description: Enter your 'git clone' HTTPS address for your KustomizeGoat fork.
   YourPublicIP:
     Type: String
-    Default: "" 
+    Default: "0.0.0.0" 
     Description: Enter your IPv4 Public IP to lock down Argo access for the workshop.
   AWSRoleID:
     Type: String
