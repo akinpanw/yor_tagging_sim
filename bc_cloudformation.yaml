@@ -229,7 +229,7 @@ Resources:
         - Key: moreinfo
           Value: workshop.bridgecrew.io
         - Key: kind
-          Value: yes
+          Value: 'yes'
     DependsOn:
       - WorkshopVPCInternetGW
       - KindEC2SG
