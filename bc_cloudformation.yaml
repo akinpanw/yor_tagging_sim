@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   UserBridgecrewAPI:
     Type: String
-    Default: "12345" 
+    Default: "" 
     Description: Enter your Bridgecrew Cloud API key.
   KustomizeForkURL:
     Type: String
@@ -11,7 +11,7 @@ Parameters:
     Description: Enter your 'git clone' HTTPS address for your KustomizeGoat fork.
   YourPublicIP:
     Type: String
-    Default: "0.0.0.0" 
+    Default: "" 
     Description: Enter your IPv4 Public IP to lock down Argo access for the workshop.
   AWSRoleID:
     Type: String
