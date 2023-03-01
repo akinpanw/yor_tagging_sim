@@ -71,7 +71,7 @@ Resources:
       VpcId: !Ref WorkshopVPC
       GroupDescription: Access for KIND Workshop host
       SecurityGroupIngress:
-        - CidrIp: 0.0.0.0/0
+        - CidrIp: '0.0.0.0/0'
           FromPort: 22
           IpProtocol: tcp
           ToPort: 22
