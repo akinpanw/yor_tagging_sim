@@ -238,7 +238,7 @@ Resources:
   WorkshopVPC:
     Type: 'AWS::EC2::VPC'
     Properties:
-      CidrBlock: 10.1.0.0/16
+      CidrBlock: '10.1.0.0/16'
       EnableDnsHostnames: false
       EnableDnsSupport: true
       InstanceTenancy: default
@@ -256,7 +256,7 @@ Resources:
     DependsOn:
       - WorkshopVPC
     Properties:
-      CidrBlock: 10.1.1.0/24
+      CidrBlock: '10.1.1.0/24'
       Tags:
         - Key: usage
           Value: Bridgecrew Workshop
@@ -276,7 +276,7 @@ Resources:
     Type: 'AWS::EC2::Route'
     Properties:
       RouteTableId: !Ref WorkshopVPCRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
+      DestinationCidrBlock: '0.0.0.0/0'
       GatewayId: !Ref WorkshopVPCInternetGW
     DependsOn:
       - WorkshopVPCInternetGW
