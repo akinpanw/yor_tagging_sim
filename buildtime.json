@@ -1,0 +1,127 @@
+{
+    "Description": "Cloud formation Stack for testing password=1234567test",
+    "Parameters": {
+        "env": {
+            "Description": "Environment",
+            "Type": "String"
+        },
+        "PrimaryRegion": {
+            "Description": "Primary Region",
+            "Type": "String"
+        },
+        "RepoName": {
+            "Description": "Repo Name",
+            "Type": "String"
+        },
+        "S3Bucket": {
+            "Description": "S3 Bucket for Child Stacks",
+            "Type": "String"
+        },
+        "version": {
+            "Description": "Commit Hash",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "PrismaTestParameter": {
+            "Properties": {
+                "Description": "Prisma test",
+                "Name": "/devops/cicd/prisma/drift",
+                "Tags": {
+                    "environment": {
+                        "Ref": "env"
+                    },
+                    "owner": "devops",
+                    "provisioned_by": {
+                        "Ref": "AWS::StackName"
+                    }
+                },
+                "Type": "String",
+                "Value": "testing"
+            },
+            "Type": "AWS::SSM::Parameter"
+        },
+        "S3PrismaBucket": {
+            "Properties": {
+                "AccessControl": "BucketOwnerFullControl",
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [
+                        {
+                            "ServerSideEncryptionByDefault": {
+                                "SSEAlgorithm": "AES256"
+                            }
+                        }
+                    ]
+                },
+                "BucketName": "devops-cicd-prisma-test",
+                "OwnershipControls": {
+                    "Rules": [
+                        {
+                            "ObjectOwnership": "BucketOwnerPreferred"
+                        }
+                    ]
+                },
+                "PublicAccessBlockConfiguration": {
+                    "BlockPublicAcls": true,
+                    "BlockPublicPolicy": true,
+                    "IgnorePublicAcls": true,
+                    "RestrictPublicBuckets": true
+                },
+                "Tags": [
+                    {
+                        "Key": "Description",
+                        "Value": "Codepipeline S3 Bucket"
+                    },
+                    {
+                        "Key": "devops-governance",
+                        "Value": "exempt"
+                    }
+                ],
+                "VersioningConfiguration": {
+                    "Status": "Enabled"
+                }
+            },
+            "Type": "AWS::S3::Bucket"
+        },
+        "Stack1": {
+            "Properties": {
+                "Parameters": {
+                    "Environment": {
+                        "Ref": "env"
+                    },
+                    "PrimaryRegion": {
+                        "Ref": "PrimaryRegion"
+                    },
+                    "version": {
+                        "Ref": "version"
+                    }
+                },
+                "TemplateURL": {
+                    "Fn::Sub": "https://${S3Bucket}.s3.amazonaws.com/cloudformation/${RepoName}/${version}/stack_1.yml"
+                },
+                "TimeoutInMinutes": 60
+            },
+            "Type": "AWS::CloudFormation::Stack"
+        },
+        "Stack2": {
+            "Properties": {
+                "Parameters": {
+                    "Environment": {
+                        "Ref": "env"
+                    },
+                    "PrimaryRegion": {
+                        "Ref": "PrimaryRegion"
+                    },
+                    "version": {
+                        "Ref": "version"
+                    }
+                },
+                "TemplateURL": {
+                    "Fn::Sub": "https://${S3Bucket}.s3.amazonaws.com/cloudformation/${RepoName}/${version}/stack_2.yml"
+                },
+                "TimeoutInMinutes": 60
+            },
+            "Type": "AWS::CloudFormation::Stack"
+        }
+    }
+}
