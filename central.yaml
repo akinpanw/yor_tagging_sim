@@ -1,4 +1,4 @@
-S3 BucketAWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: '2010-09-09'
 
 Description: Cloud formation Stack for testing password=1234567test
 
