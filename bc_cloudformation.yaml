@@ -1,4 +1,5 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: '2010-09-09'
+
 Parameters:
   UserBridgecrewAPI:
     Type: String
@@ -10,7 +11,7 @@ Parameters:
     Description: Enter your 'git clone' HTTPS address for your KustomizeGoat fork.
   YourPublicIP:
     Type: String
-    Default: "" 
+    Default: "0.0.0.0" 
     Description: Enter your IPv4 Public IP to lock down Argo access for the workshop.
   AWSRoleID:
     Type: String
@@ -70,106 +71,10 @@ Resources:
       VpcId: !Ref WorkshopVPC
       GroupDescription: Access for KIND Workshop host
       SecurityGroupIngress:
-        - CidrIp: 0.0.0.0/0
+        - CidrIp: '0.0.0.0/0'
           FromPort: 22
           IpProtocol: tcp
           ToPort: 22
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 32443
-          IpProtocol: tcp
-          ToPort: 32443
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 32080
-          IpProtocol: tcp
-          ToPort: 32080
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42001
-          IpProtocol: tcp
-          ToPort: 42001
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42002
-          IpProtocol: tcp
-          ToPort: 42002
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42003
-          IpProtocol: tcp
-          ToPort: 42003
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42004
-          IpProtocol: tcp
-          ToPort: 42004
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42005
-          IpProtocol: tcp
-          ToPort: 42005
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42006
-          IpProtocol: tcp
-          ToPort: 42006
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42007
-          IpProtocol: tcp
-          ToPort: 42007
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42008
-          IpProtocol: tcp
-          ToPort: 42008
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42009
-          IpProtocol: tcp
-          ToPort: 42009
-        - CidrIp: 
-            !Join
-              - ''
-              - - !Ref YourPublicIP
-                - '/24'
-          FromPort: 42010
-          IpProtocol: tcp
-          ToPort: 42010
       Tags:
         - Key: usage
           Value: Bridgecrew Workshop
@@ -209,7 +114,7 @@ Resources:
         - DeviceName: /dev/sda1
           Ebs:
             VolumeType: gp2
-            VolumeSize: '100'
+            VolumeSize: 100
             DeleteOnTermination: true
             Encrypted: false
       NetworkInterfaces:
@@ -228,7 +133,7 @@ Resources:
         - Key: moreinfo
           Value: workshop.bridgecrew.io
         - Key: kind
-          Value: yes
+          Value: 'yes'
     DependsOn:
       - WorkshopVPCInternetGW
       - KindEC2SG
@@ -237,7 +142,7 @@ Resources:
   WorkshopVPC:
     Type: 'AWS::EC2::VPC'
     Properties:
-      CidrBlock: 10.1.0.0/16
+      CidrBlock: '10.1.0.0/16'
       EnableDnsHostnames: false
       EnableDnsSupport: true
       InstanceTenancy: default
@@ -255,7 +160,7 @@ Resources:
     DependsOn:
       - WorkshopVPC
     Properties:
-      CidrBlock: 10.1.1.0/24
+      CidrBlock: '10.1.1.0/24'
       Tags:
         - Key: usage
           Value: Bridgecrew Workshop
@@ -275,7 +180,7 @@ Resources:
     Type: 'AWS::EC2::Route'
     Properties:
       RouteTableId: !Ref WorkshopVPCRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
+      DestinationCidrBlock: '0.0.0.0/0'
       GatewayId: !Ref WorkshopVPCInternetGW
     DependsOn:
       - WorkshopVPCInternetGW
