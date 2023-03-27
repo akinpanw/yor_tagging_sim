@@ -1,0 +1,87 @@
+# S3 BucketAWSTemplateFormatVersion: '2010-09-09'
+Description: Cloud formation Stack for testing password=1234567test
+
+Parameters:
+  env:
+    Type: String
+    Description: 'Environment'
+
+  version:
+    Type: String
+    Description: Commit Hash
+
+  PrimaryRegion:
+    Type: String
+    Description: 'Primary Region'
+
+  S3Bucket:
+    Type: String
+    Description: S3 Bucket for Child Stacks
+
+  RepoName:
+    Type: String
+    Description: Repo Name
+
+Resources:
+
+  ##########################
+  # Reserach View Deployment
+  ##########################
+  Stack1:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${S3Bucket}.s3.amazonaws.com/cloudformation/${RepoName}/${version}/stack_1.yml
+      TimeoutInMinutes: 60
+      Parameters:
+        Environment: !Ref env
+        version: !Ref version
+        PrimaryRegion: !Ref PrimaryRegion
+  
+  Stack2:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${S3Bucket}.s3.amazonaws.com/cloudformation/${RepoName}/${version}/stack_2.yml
+      TimeoutInMinutes: 60
+      Parameters:
+        Environment: !Ref env
+        version: !Ref version
+        PrimaryRegion: !Ref PrimaryRegion
+        
+  PrismaTestParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /devops/cicd/prisma/drift
+      Type: String
+      Value: "testing"
+      Description: Prisma test
+      Tags:
+        environment: !Ref env
+        owner: devops
+        provisioned_by: !Ref AWS::StackName    
+ 
+  S3PrismaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: BucketOwnerFullControl
+      OwnershipControls: 
+        Rules: 
+          - ObjectOwnership: BucketOwnerPreferred
+      BucketName: devops-cicd-prisma-test
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
+      Tags:
+        - Key: Description
+          Value: Codepipeline S3 Bucket
+        - Key: devops-governance
+          Value: exempt
+ 
